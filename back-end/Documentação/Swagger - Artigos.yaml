@@ -1,0 +1,270 @@
+swagger: '2.0'
+info:
+  description: 'Gerencia os Artigos do site'
+  version: '1.0.0'
+  title: 'Daniel e Thais /artigos'
+host: 'disney.compjunior.com.br'
+basePath: '/api/artigos/'
+tags:
+  - name: 'Artigo'
+    description: 'CRUD das informações dos Artigos'
+paths:
+  /:
+    get:
+      tags:
+        - 'Artigo'
+      summary: 'Obtem as instâncias dos Artigos cadastrados'
+      description: 'Obtem as instâncias dos Artigos cadastrados'
+      operationId: 'Obter'
+      parameters:
+        - in: 'query'
+          name: 'page'
+          required: true
+          type: 'number'
+        - in: 'query'
+          name: 'perPage'
+          required: true
+          type: 'number'
+      responses:
+        '200':
+          description: 'OK'
+          schema:
+            type: 'object'
+            $ref: '#/definitions/ArticlePaginationResponse'
+        '404':
+          description: '{ erro: "Nenhum artigo foi encontrado" }'
+        '500':
+          description: '{ erro: "Erro interno do servidor" }'
+    post:
+      tags:
+        - 'Artigo'
+      summary: 'Cria uma instância de um novo Artigo'
+      description: 'Cria uma instância de um novo Artigo. Requer nível Admin.'
+      operationId: 'Adicionar'
+      consumes:
+        - 'application/json'
+      produces:
+        - 'application/json'
+      parameters:
+        - in: 'body'
+          name: 'body'
+          required: true
+          schema:
+            $ref: '#/definitions/Article'
+      responses:
+        '200':
+          description: '{ mensagem: "Artigo criado com sucesso" }'
+        '400':
+          description: '{ erro: "O título é obrigatório", "O autor é obrigatório", "O texto  é obrigatório" ou "Já existe um artigo cadastrado com esse título" }'
+        '401':
+          description: '{ erro: "Sem permissão para executar essa ação" }'
+        '500':
+          description: '{ erro: "Erro interno do servidor" }'
+  /destaques:
+    get:
+      tags:
+        - 'Artigo'
+      summary: 'Obtem as instâncias dos Artigos destacados'
+      description: 'Obtem as instâncias dos Artigos destacados'
+      operationId: 'ObterDestaque'
+      responses:
+        '200':
+          description: 'OK'
+          schema:
+            type: 'array'
+            items:
+              $ref: '#/definitions/ArticleResponse'
+        '500':
+          description: '{ erro: "Erro interno do servidor" }'
+    put:
+      tags:
+        - 'Artigo'
+      summary: 'Edita os artigos destacados'
+      description: 'Edita os artigos destacados. As IDs dos 3 artigos serão enviadas de uma vez em um array na requisição. Requer nível Admin.'
+      operationId: 'EditarDestacados'
+      parameters:
+        - in: 'body'
+          name: 'body'
+          required: true
+          schema:
+            type: 'object'
+            properties:
+              spotlightIds:
+                type: 'array'
+                items:
+                  type: 'string'
+      responses:
+        '200':
+          description: '{ mensagem: "Destaques atualizados com sucesso" }'
+        '400':
+          description: '{ erro: "Número de artigos destacados é diferente de 3" ou "Algum dos IDs passados é inválido" }'
+        '403':
+          description: '{ erro: "Não autorizado a fazer essa ação" }'
+        '404':
+          description: '{ erro: "Artigo não encontrado" }'
+        '500':
+          description: '{ erro: "Erro interno do servidor" }'
+  /{slug}:
+    get:
+      tags:
+        - 'Artigo'
+      summary: 'Busca a instância de um Artigo a partir do slug'
+      description: 'Busca a instância de um Artigo a partir do slug'
+      operationId: 'Buscar-Slug'
+      parameters:
+        - in: 'path'
+          name: slug
+          required: true
+          type: 'string'
+      responses:
+        '200':
+          description: 'OK'
+          schema:
+            type: 'object'
+            $ref: '#/definitions/ArticleResponse'
+        '403':
+          description: '{ erro: "Não autorizado a fazer essa ação" }'
+        '404':
+          description: '{ erro: "Esse artigo não foi encontrado" }'
+        '500':
+          description: '{ erro: "Erro interno do servidor" }'
+  /atualizar/{id}:
+    put:
+      tags:
+        - 'Artigo'
+      summary: 'Edita a instância de um Artigo'
+      description: 'Edita a instância de um Artigo. Requer nível Admin.'
+      operationId: 'Editar'
+      parameters:
+        - in: 'path'
+          name: id
+          required: true
+          type: 'string'
+        - in: 'body'
+          name: 'body'
+          required: true
+          schema:
+            $ref: '#/definitions/Article'
+      responses:
+        '200':
+          description: '{ mensagem: "Instância atualizada com sucesso" }'
+        '400':
+          description: '{ erro: "Já existe um artigo cadastrado com esse título", "O título é obrigatório", "O autor é obrigatório" ou "O texto  é obrigatório" }'
+        '403':
+          description: '{ erro: "Não autorizado a fazer essa ação" }'
+        '404':
+          description: '{ erro: "Instância não foi encontrada" }'
+        '500':
+          description: '{ erro: "Erro interno do servidor" }'
+  /{id}:
+    delete:
+      tags:
+        - 'Artigo'
+      summary: 'Deleta a instância de um Artigo'
+      description: 'Deleta a instância de um Artigo. Requer nível Admin.'
+      operationId: 'Deletar'
+      consumes:
+        - 'application/json'
+      produces:
+        - 'application/json'
+      parameters:
+        - in: 'path'
+          name: id
+          required: true
+          type: 'string'
+      responses:
+        '200':
+          description: '{ mensagem: "Instância deletada com sucesso" }'
+        '400':
+          description: '{ erro: "ID não específicado" ou "ID inválido" }'
+        '403':
+          description: '{ erro: "Não autorizado a fazer essa ação" }'
+        '404':
+          description: '{ erro: "Instância não foi encontrada" }'
+        '500':
+          description: '{ error: "Erro interno do servidor" }'
+  /busca:
+    get:
+      tags:
+        - 'Artigo'
+      summary: 'Busca o artigo'
+      description: 'Busca o artigo em "author","title" ou "text" com o texto inserido em ?text= e quantidade ?perSearch. Um exemplo de uso seria /artigos/busca?perSearch=2&text=TEXTO-A-SER-BUSCADO'
+      operationId: 'Busca'
+      parameters:
+        - in: 'query'
+          name: 'text'
+          required: true
+          type: 'number'
+        - in: 'query'
+          name: 'perSearch'
+          required: true
+          type: 'number'
+      responses:
+        '200':
+          description: 'OK'
+          schema:
+            type: 'array'
+            items:
+              $ref: '#/definitions/ArticleResponse'
+        '404':
+          description: '{ erro: "Instância não foi encontrada" }'
+        '500':
+          description: '{ erro: "Erro interno do servidor" }'
+definitions:
+  Article:
+    type: 'object'
+    properties:
+      author:
+        type: 'string'
+      title:
+        type: 'string'
+      text:
+        type: 'string'
+  ArticleResponse:
+    type: 'object'
+    properties:
+      _id:
+        type: 'string'
+      author:
+        type: 'string'
+      title:
+        type: 'string'
+      text:
+        type: 'string'
+      spotlight:
+        type: 'boolean'
+      date:
+        type: 'string'
+        example: 'date'
+      slug:
+        type: 'string'
+      readTime:
+        type: 'string'
+      __v:
+        type: 'number'
+  ArticlePaginationResponse:
+    type: 'object'
+    properties:
+      articles:
+        type: 'array'
+        items:
+          $ref: '#/definitions/ArticleResponse'
+      articlesCount:
+        type: 'number'
+      articlesPerPage:
+        type: 'number'
+      totalPages:
+        type: 'number'
+      currentPage:
+        type: 'number'
+      hasPrevPage:
+        type: 'boolean'
+      hasNextPage:
+        type: 'boolean'
+      prev:
+        type: 'number'
+      next:
+        type: 'number'
+
+schemes:
+  - https

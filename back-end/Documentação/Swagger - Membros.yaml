@@ -1,0 +1,184 @@
+swagger: '2.0'
+info:
+  description: 'Gerencia os Membros'
+  version: '1.0.0'
+  title: 'Daniel e Thais - Membros'
+host: 'disney.compjunior.com.br'
+basePath: '/api/membros'
+tags:
+  - name: 'Membros'
+    description: 'CRUD dos Membros da equipe'
+paths:
+  /:
+    post:
+      tags:
+        - 'Membros'
+      summary: 'Adiciona um membro'
+      description: 'Adiciona um membro na equipe. Requer nível Admin.'
+      operationId: 'Adicionar'
+      consumes:
+        - 'Multipart form'
+      produces:
+        - 'application/json'
+      parameters:
+        - in: 'body'
+          name: 'body'
+          required: true
+          schema:
+            type: 'object'
+            properties:
+              nome:
+                type: 'string'
+              descricao:
+                type: 'string'
+              urlOAB:
+                type: 'string'
+              urlImagem:
+                type: 'string'
+                example: 'imagem'
+      responses:
+        '200':
+          description: 'OK'
+          schema:
+            type: 'object'
+            properties:
+              _id:
+                type: 'string'
+              nome:
+                type: 'string'
+              descricao:
+                type: 'string'
+              urlOAB:
+                type: 'string'
+              urlImagem:
+                type: 'string'
+                example: 'imagem'
+              __v:
+                type: 'integer'
+        '400':
+          description: '{ erro: "Algumas informações obrigátorias não foram passadas" }'
+        '401':
+          description: '{ erro: "Token de autenticação inválido" ou "É obrigatório o token de autenticação" }'
+        '403':
+          description: '{ erro: "Não autorizado a fazer essa ação" }'
+        '500':
+          description: '{ erro: "Erro interno do servidor" }'
+    get:
+      tags:
+        - 'Membros'
+      summary: 'Obtem os Membros'
+      description: 'Obtem os Membros da equipe.'
+      operationId: 'Obter'
+      responses:
+        '200':
+          description: 'OK'
+          schema:
+            type: 'array'
+            items:
+              type: 'object'
+              properties:
+                _id:
+                  type: 'string'
+                nome:
+                  type: 'string'
+                descricao:
+                  type: 'string'
+                urlOAB:
+                  type: 'string'
+                urlImagem:
+                  type: 'string'
+                __v:
+                  type: 'integer'
+        '500':
+          description: '{ erro: "Erro interno do servidor" }'
+
+  /{id}:
+    delete:
+      tags:
+        - 'Membros'
+      summary: 'Deleta um Membro'
+      description: 'Deleta um Membro da equipe. Requer nível Admin.'
+      operationId: 'Deletar'
+      responses:
+        '200':
+          description: 'OK'
+          schema:
+            type: 'object'
+            properties:
+              _id:
+                type: 'string'
+              nome:
+                type: 'string'
+              descricao:
+                type: 'string'
+              urlOAB:
+                type: 'string'
+              urlImagem:
+                type: 'string'
+              __v:
+                type: 'integer'
+        '400':
+          description: '{ erro: "ID inválido" ou "Algumas informações obrigátorias não foram passadas" }'
+        '401':
+          description: '{ erro: "Token de autenticação inválido" ou "É obrigatório o token de autenticação" }'
+        '403':
+          description: '{ erro: "Não autorizado a fazer essa ação" }'
+        '404':
+          description: '{ erro: "Instância não foi encontrada" }'
+        '500':
+          description: '{ error: "Erro interno do servidor" }'
+    put:
+      tags:
+        - 'Membros'
+      summary: 'Edita um Membro'
+      description: 'Edita um Membro da equipe. Requer nível Admin.'
+      operationId: 'Editar'
+      consumes:
+        - 'Multipart form'
+      produces:
+        - 'application/json'
+      parameters:
+        - in: 'body'
+          name: 'body'
+          required: true
+          schema:
+            type: 'object'
+            properties:
+              nome:
+                type: 'string'
+              descricao:
+                type: 'string'
+              urlOAB:
+                type: 'string'
+              urlImagem:
+                type: 'string'
+      responses:
+        '200':
+          description: 'OK'
+          schema:
+            type: 'object'
+            properties:
+              _id:
+                type: 'string'
+              nome:
+                type: 'string'
+              descricao:
+                type: 'string'
+              urlOAB:
+                type: 'string'
+              urlImagem:
+                type: 'string'
+              __v:
+                type: 'integer'
+        '400':
+          description: '{ erro: "ID inválido" ou "Algumas informações obrigátorias não foram passadas" }'
+        '401':
+          description: '{ erro: "Token de autenticação inválido" ou "É obrigatório o token de autenticação" }'
+        '403':
+          description: '{ erro: "Não autorizado a fazer essa ação" }'
+        '404':
+          description: '{ erro: "Instância não foi encontrada" }'
+        '500':
+          description: '{ erro: "Erro interno do servidor" }'
+schemes:
+  - https

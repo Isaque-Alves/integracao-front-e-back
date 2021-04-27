@@ -1,0 +1,258 @@
+swagger: '2.0'
+info:
+  description: 'Gerencia as operações relacionadas à autenticação e usuário'
+  version: '1.0.0'
+  title: 'Daniel e Thais - Autenticação'
+host: 'disney.compjunior.com.br'
+basePath: '/api/autenticacao'
+tags:
+  - name: 'Autenticação'
+    description: 'Gerencia as operações relacionadas à autenticação e usuário'
+paths:
+  /convidar:
+    post:
+      tags:
+        - 'Autenticação'
+      summary: 'Envia os convites para os usuários participarem do sistema'
+      description: 'Envia os convites para os usuários participarem do sistema. Requer nível admin.'
+      operationId: 'Convidar'
+      consumes:
+        - 'application/json'
+      produces:
+        - 'application/json'
+      parameters:
+        - in: 'body'
+          name: 'body'
+          required: true
+          schema:
+            type: 'object'
+            properties:
+              emails:
+                type: 'string'
+                example: 'email1@gmail.com ; email2@gmail.com ...'
+      responses:
+        '200':
+          description: '{ mensagem: "Emails enviados com sucesso" }'
+        '400':
+          description: '{ erro: "emails deve ser uma string", "É obrigatório inserir pelo menos um e-mail" ou "Email inválido"}'
+        '401':
+          description: '{ erro: "Token de autenticação inválido" ou "É obrigatório o token de autenticação" }'
+        '403':
+          description: '{ erro: "Não autorizado a fazer essa ação" }'
+        '500':
+          description: '{ erro: "Erro interno do servidor" }'
+
+  /cadastrar:
+    post:
+      tags:
+        - 'Autenticação'
+      summary: 'Faz o cadastro dos dados do usuário com o token de recuperação recebido pelo email'
+      description: 'Faz o cadastro dos dados do usuário com o token de recuperação recebido pelo email'
+      operationId: 'Cadastrar'
+      consumes:
+        - 'application/json'
+      produces:
+        - 'application/json'
+      parameters:
+        - in: 'body'
+          name: 'body'
+          required: true
+          schema:
+            type: 'object'
+            properties:
+              nome:
+                type: 'string'
+              documento:
+                type: 'string'
+              senha:
+                type: 'string'
+              tokenRecuperacao:
+                type: 'string'
+      responses:
+        '200':
+          description: 'OK'
+          schema:
+            type: 'object'
+            properties:
+              token:
+                type: 'string'
+                example: 'asuhdea87sehausehasd8a7sdhausieahs8e7h'
+              expiracao:
+                type: 'string'
+                example: '7d'
+        '400':
+          description: '{ erro: "Algumas informações obrigátorias não foram passadas", "Usuário já cadastrado", "Cadastro expirado", "CPF/CNPJ inválido", "CPF/CNPJ já cadastrado" ou "Token de cadastro inválido" }'
+        '500':
+          description: '{ erro: "Erro interno do servidor" }'
+
+  /login:
+    post:
+      tags:
+        - 'Autenticação'
+      summary: 'Faz o login do usuário no sistema'
+      description: 'Faz o login do usuário no sistema'
+      operationId: 'Logar'
+      consumes:
+        - 'application/json'
+      produces:
+        - 'application/json'
+      parameters:
+        - in: 'body'
+          name: 'body'
+          required: true
+          schema:
+            type: 'object'
+            properties:
+              email:
+                type: 'string'
+              senha:
+                type: 'string'
+      responses:
+        '200':
+          description: 'OK'
+          schema:
+            type: 'object'
+            properties:
+              token:
+                type: 'string'
+                example: 'asuhdea87sehausehasd8a7sdhausieahs8e7h'
+              expiracao:
+                type: 'string'
+                example: '7d'
+        '400':
+          description: '{ erro: "Algumas informações obrigátorias não foram passadas" ou "Email ou senha incorretos" }'
+        '500':
+          description: '{ erro: "Erro interno do servidor" }'
+
+  /esqueceu-senha:
+    post:
+      tags:
+        - 'Autenticação'
+      summary: 'Faz a requisição do email com o token de recuperação para recuperar senha'
+      description: 'Faz a requisição do email com o token de recuperação para recuperar senha'
+      operationId: 'Esqueceu a senha'
+      consumes:
+        - 'application/json'
+      produces:
+        - 'application/json'
+      parameters:
+        - in: 'body'
+          name: 'body'
+          required: true
+          schema:
+            type: 'object'
+            properties:
+              email:
+                type: 'string'
+
+      responses:
+        '200':
+          description: '{ mensagem: "Email de recuperação de senha enviado" }'
+        '400':
+          description: '{ erro: "Algumas informações obrigátorias não foram passadas" ou "Usuário não cadastrado" }'
+        '404':
+          description: '{ erro: "Usuário não encontrado" }'
+        '500':
+          description: '{ erro: "Erro interno do servidor" }'
+
+  /alterar-senha:
+    post:
+      tags:
+        - 'Autenticação'
+      summary: 'Faz a alteração da senha com o token de recuperação recebido pelo e-mail'
+      description: 'Faz a alteração da senha com o token de recuperação recebido pelo e-mail'
+      operationId: 'Alterar a senha'
+      consumes:
+        - 'application/json'
+      produces:
+        - 'application/json'
+      parameters:
+        - in: 'body'
+          name: 'body'
+          required: true
+          schema:
+            type: 'object'
+            properties:
+              tokenRecuperacao:
+                type: 'string'
+              senha:
+                type: 'string'
+      responses:
+        '200':
+          description: '{ mensagem: "Senha alterada com sucesso" }'
+        '400':
+          description: '{ erro: "Algumas informações obrigátorias não foram passadas", "Token de Recuperação inválido", "Período para alterar senha expirado" ou "Usuário não cadastrado" }'
+        '500':
+          description: '{ erro: "Erro interno do servidor" }'
+
+  /validacao?token_recuperacao={TOKEN DE RECUPERAÇÃO}:
+    get:
+      tags:
+        - 'Autenticação'
+      summary: 'Faz a validação do token de recuperação recebido pelo email'
+      description: 'Faz a validação do token de recuperação recebido pelo email, retornando o e-mail o qual está sendo feita a requisição.'
+      operationId: 'Validação'
+      consumes:
+        - 'application/json'
+      produces:
+        - 'application/json'
+      parameters:
+        - in: 'query'
+          name: 'token_recuperacao'
+          required: true
+          type: 'string'
+      responses:
+        '200':
+          description: '{ email: "ednaldopereira@gmail.com" }'
+        '400':
+          description: '{ erro: "Algumas informações obrigátorias não foram passadas" ou "O prazo expirou" }'
+        '404':
+          description: '{ erro: "Instância não foi encontrada" }'
+        '500':
+          description: '{ erro: "Erro interno do servidor" }'
+  /dados:
+    get:
+      tags:
+        - 'Autenticação'
+      summary: 'Lista os dados do usuário logado'
+      description: 'Lista os dados do usuário logado, utilizando o Bearer Token (token de autenticação) para reconhecê-lo'
+      operationId: 'Listar dados'
+      consumes:
+        - 'application/json'
+      produces:
+        - 'application/json'
+      parameters:
+        - in: 'header'
+          name: 'Bearer'
+          required: true
+          type: 'string'
+          description: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZjgxNmE4MzIzZGIyZjM0OThjYjQwZDEiLCJuaXZlbCI6InVzdWFyaW8iLCJpYXQiOjE2MDMyOTY0NTMsImV4cCI6MTYwMzM4Mjg1M30.1-1PLXWVdElAJ4cZ9G3wd6B8cE2usQXnZ8PIYre0QIo'
+      responses:
+        '200':
+          schema:
+            $ref: '#/definitions/UsuarioResponse'
+          description: 'OK'
+        '401':
+          description: '{ erro: "Token de autenticação inválido" ou "É obrigatório o token de autenticação" }'
+        '404':
+          description: '{ erro: "Instância não foi encontrada" }'
+        '500':
+          description: '{ erro: "Erro interno do servidor" }'
+definitions:
+  UsuarioResponse:
+    type: 'object'
+    properties:
+      nivel:
+        type: 'string'
+      _id:
+        type: 'string'
+      nome:
+        type: 'string'
+      documento:
+        type: 'string'
+      email:
+        type: 'string'
+      __v:
+        type: 'number'
+schemes:
+  - https

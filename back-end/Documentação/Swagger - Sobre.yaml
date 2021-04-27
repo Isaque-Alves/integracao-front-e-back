@@ -1,0 +1,100 @@
+swagger: '2.0'
+info:
+  description: 'Gerencia a seção Sobre'
+  version: '1.0.0'
+  title: 'Daniel e Thais /sobre'
+host: 'disney.compjunior.com.br'
+basePath: '/api/sobre/'
+tags:
+  - name: 'Sobre'
+    description: 'CRUD das informações da seção Sobre'
+paths:
+  /:
+    get:
+      tags:
+        - 'Sobre'
+      summary: 'Obtem a instância da seção Sobre'
+      description: 'Obtem a instância da seção Sobre'
+      operationId: 'Obter'
+      responses:
+        '200':
+          description: 'OK'
+          schema:
+            $ref: '#/definitions/AboutResponse'
+        '500':
+          description: '{ erro: "Erro interno do servidor" }'
+    post:
+      tags:
+        - 'Sobre'
+      summary: 'Cria uma instância da seção de Sobre'
+      description: 'Cria uma instância da seção de Sobre. Requer nível Admin.'
+      operationId: 'Adicionar'
+      consumes:
+        - 'application/json'
+      produces:
+        - 'application/json'
+      parameters:
+        - in: 'body'
+          name: 'body'
+          required: true
+          schema:
+            $ref: '#/definitions/About'
+      responses:
+        '200':
+          description: '{ mensagem: "Instância foi criada com sucesso" }'
+        '400':
+          description: '{ erro: "Nenhum dado enviado na requisição", "O texto da seção é obrigatório" ou "A imagem é obrigatória" }'
+        '403':
+          description: '{ erro: "Não autorizado a fazer essa ação" }'
+        '500':
+          description: '{ erro: "Erro interno do servidor" }'
+  /{id}:
+    put:
+      tags:
+        - 'Sobre'
+      summary: 'Edita a instância da seção Sobre'
+      description: 'Edita a instância da seção Sobre. Requer nível Admin.'
+      operationId: 'Editar'
+      parameters:
+        - in: 'path'
+          name: id
+          required: true
+          type: 'string'
+        - in: 'body'
+          name: 'body'
+          required: true
+          schema:
+            $ref: '#/definitions/About'
+      responses:
+        '200':
+          description: 'Instância atualizada com sucesso'
+        '400':
+          description: '{ erro: "ID não específicado", "ID inválido", "O ID inserido não está cadastrado", "Nenhum dado enviado na requisição" ou "O texto da seção é obrigatório" }'
+        '403':
+          description: '{ erro: "Não autorizado a fazer essa ação" }'
+        '404':
+          description: '{ erro: "Instância não foi encontrada" }'
+        '500':
+          description: '{ erro: "Erro interno do servidor" }'
+definitions:
+  About:
+    type: 'object'
+    properties:
+      text:
+        type: 'string'
+      imageUrl:
+        type: 'string'
+        example: 'file'
+  AboutResponse:
+    type: 'object'
+    properties:
+      _id:
+        type: 'string'
+      text:
+        type: 'string'
+      imageUrl:
+        type: 'string'
+      __v:
+        type: 'string'
+schemes:
+  - https

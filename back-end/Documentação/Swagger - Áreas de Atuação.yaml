@@ -1,0 +1,127 @@
+swagger: '2.0'
+info:
+  description: 'Gerencia as Áreas de Atuação'
+  version: '1.0.0'
+  title: 'Daniel e Thais - Áreas de Atuação'
+host: 'disney.compjunior.com.br'
+basePath: '/api/areas'
+tags:
+  - name: 'Áreas de atuação'
+    description: 'CRUD das áreas de atuação da página'
+paths:
+  /:
+    post:
+      tags:
+        - 'Áreas de atuação'
+      summary: 'Adiciona uma área de atuação'
+      description: 'Adiciona uma área de atuação. Requer nível Admin.'
+      operationId: 'Adicionar'
+      consumes:
+        - 'application/json'
+      produces:
+        - 'application/json'
+      parameters:
+        - in: 'body'
+          name: 'body'
+          required: true
+          schema:
+            $ref: '#/definitions/AreaAtuacao'
+      responses:
+        '200':
+          description: 'OK'
+          schema:
+            $ref: '#/definitions/AreaAtuacaoResponse'
+        '400':
+          description: '{ erro: "Algumas informações obrigátorias não foram passadas" }'
+        '401':
+          description: '{ erro: "Token de autenticação inválido" ou "É obrigatório o token de autenticação" }'
+        '403':
+          description: '{ erro: "Não autorizado a fazer essa ação" }'
+        '500':
+          description: '{ erro: "Erro interno do servidor" }'
+    get:
+      tags:
+        - 'Áreas de atuação'
+      summary: 'Obtem as áreas de atuação'
+      description: 'Obtem as áreas de atuação.'
+      operationId: 'Obter'
+      responses:
+        '200':
+          description: 'OK'
+          schema:
+            type: 'array'
+            items:
+              $ref: '#/definitions/AreaAtuacaoResponse'
+        '500':
+          description: '{ erro: "Erro interno do servidor" }'
+
+  /{id}:
+    delete:
+      tags:
+        - 'Áreas de atuação'
+      summary: 'Deleta uma área de atuação'
+      description: 'Deleta uma área de atuação. Requer nível Admin.'
+      operationId: 'Deletar'
+      responses:
+        '200':
+          description: 'OK'
+          schema:
+            $ref: '#/definitions/AreaAtuacaoResponse'
+        '400':
+          description: '{ erro: "Algumas informações obrigátorias não foram passadas" ou "ID inválido" }'
+        '401':
+          description: '{ erro: "Token de autenticação inválido" ou "É obrigatório o token de autenticação" }'
+        '403':
+          description: '{ erro: "Não autorizado a fazer essa ação" }'
+        '404':
+          description: '{ erro: "Instância não foi encontrada" }'
+        '500':
+          description: '{ error: "Erro interno do servidor" }'
+    put:
+      tags:
+        - 'Áreas de atuação'
+      summary: 'Edita uma área de atuação'
+      description: 'Edita uma área de atuação. Requer nível Admin.'
+      operationId: 'Editar'
+      parameters:
+        - in: 'body'
+          name: 'body'
+          required: true
+          schema:
+            $ref: '#/definitions/AreaAtuacao'
+      responses:
+        '200':
+          description: 'OK'
+          schema:
+            $ref: '#/definitions/AreaAtuacaoResponse'
+        '400':
+          description: '{ erro: "Algumas informações obrigátorias não foram passadas" ou "ID inválido" }'
+        '401':
+          description: '{ erro: "Token de autenticação inválido" ou "É obrigatório o token de autenticação" }'
+        '403':
+          description: '{ erro: "Não autorizado a fazer essa ação" }'
+        '404':
+          description: '{ erro: "Instância não foi encontrada" }'
+        '500':
+          description: '{ erro: "Erro interno do servidor" }'
+definitions:
+  AreaAtuacao:
+    type: 'object'
+    properties:
+      titulo:
+        type: 'string'
+      descricao:
+        type: 'string'
+  AreaAtuacaoResponse:
+    type: 'object'
+    properties:
+      _id:
+        type: 'string'
+      titulo:
+        type: 'string'
+      descricao:
+        type: 'string'
+      __v:
+        type: 'string'
+schemes:
+  - https

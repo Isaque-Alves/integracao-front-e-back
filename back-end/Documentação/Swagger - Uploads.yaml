@@ -1,0 +1,62 @@
+swagger: '2.0'
+info:
+  description: 'Gerencia os uploads'
+  version: '1.0.0'
+  title: 'Daniel e Thais /sobre'
+host: 'disney.compjunior.com.br'
+basePath: '/api/uploads/'
+tags:
+  - name: 'Uploads'
+    description: 'GET e POST de arquivos do Back-end'
+paths:
+  /images/{nomeDoArquivo}:
+    get:
+      tags:
+        - 'Uploads'
+      summary: 'Obtem a imagem requisitada'
+      description: 'Obtem a imagem requisitada'
+      operationId: 'Obter'
+      responses:
+        '200':
+          description: 'OK. Retorna o arquivo da imagem'
+        '404':
+          description: '{ erro: "Arquivo não encontrado" }'
+  /images:
+    post:
+      tags:
+        - 'Uploads'
+      summary: 'Envia uma imagem para o Back-end'
+      description: 'Envia uma imagem para o Back-end. Essa rota foi criada para enviar as imagens de um artigo para o Back-end. Requer nível Admin.'
+      operationId: 'Enviar'
+      consumes:
+        - 'application/json'
+      produces:
+        - 'application/json'
+      parameters:
+        - in: 'body'
+          name: 'body'
+          required: true
+          schema:
+            type: 'object'
+            properties:
+              image:
+                type: 'string'
+                example: 'Arquivo de imagem'
+      responses:
+        '200':
+          description: 'OK.'
+          schema:
+            type: 'object'
+            properties:
+              url:
+                type: 'string'
+        '400':
+          description: '{ erro: "Imagem não enviada"}'
+        '401':
+          description: '{ erro: "Token de autenticação inválido" ou "É obrigatório o token de autenticação" }'
+        '403':
+          description: '{ erro: "Não autorizado a fazer essa ação" }'
+        '500':
+          description: '{ erro: "Erro interno do servidor" }'
+schemes:
+  - https

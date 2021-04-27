@@ -1,0 +1,156 @@
+swagger: '2.0'
+info:
+  description: 'Gerencia a seção de Contato'
+  version: '1.0.0'
+  title: 'Daniel e Thais /contato'
+host: 'disney.compjunior.com.br'
+basePath: '/api/contato/'
+tags:
+  - name: 'Contato'
+    description: 'CRUD das informações de Contato da página'
+paths:
+  /:
+    get:
+      tags:
+        - 'Contato'
+      summary: 'Obtem a instância da seção Contato'
+      description: 'Obtem a instância da seção Contato'
+      operationId: 'Obter'
+      responses:
+        '200':
+          description: 'OK'
+          schema:
+            type: 'object'
+            $ref: '#/definitions/ContactResponse'
+        '500':
+          description: '{ erro: "Erro interno do servidor" }'
+    post:
+      tags:
+        - 'Contato'
+      summary: 'Cria uma instância da seção de Contato'
+      description: 'Cria uma instância da seção de Contato. Formatação do telefone: (12) 1234-1234 ou (12) 12345-1234. Requer nível Admin.'
+      operationId: 'Adicionar'
+      consumes:
+        - 'application/json'
+      produces:
+        - 'application/json'
+      parameters:
+        - in: 'body'
+          name: 'body'
+          required: true
+          schema:
+            $ref: '#/definitions/Contact'
+      responses:
+        '200':
+          description: "{ mensagem: 'Instância da seção criada com sucesso' }"
+        '400':
+          description: '{ erro: "O email é obrigatório", "O telefone é obrigatório", "O endereço  é obrigatório", "A latitude do endereço é obrigatória", "A longitude do endereço é obrigatória", "As redes sociais cadastradas na seção são obrigatórias" ou "O telefone enviado está mal formatado" }'
+        '403':
+          description: '{ erro: "Não autorizado a fazer essa ação" }'
+        '500':
+          description: '{ erro: "Erro interno do servidor" }'
+  /{id}:
+    put:
+      tags:
+        - 'Contato'
+      summary: 'Edita a instância da seção Contato'
+      description: 'Edita a instância da seção Contato. Formatação do telefone: (12) 1234-1234 ou (12) 12345-1234. Requer nível Admin.'
+      operationId: 'Editar'
+      parameters:
+        - in: 'path'
+          name: id
+          required: true
+          type: 'string'
+        - in: 'body'
+          name: 'body'
+          required: true
+          schema:
+            $ref: '#/definitions/Contact'
+      responses:
+        '200':
+          description: 'OK'
+          schema:
+            $ref: '#/definitions/ContactResponse'
+        '400':
+          description: '{ erro:"ID não específicado", "ID inválido", "O email é obrigatório", "O telefone é obrigatório", "O endereço  é obrigatório", "A latitude do endereço é obrigatória", "A longitude do endereço é obrigatória", "As redes sociais cadastradas na seção são obrigatórias" ou "O telefone enviado está mal formatado" }'
+        '403':
+          description: '{ erro: "Não autorizado a fazer essa ação" }'
+        '404':
+          description: '{ erro: "Instância da seção contato não foi encontrada" }'
+        '500':
+          description: '{ erro: "Erro interno do servidor" }'
+    delete:
+      tags:
+        - 'Contato'
+      summary: 'Deleta a instância da seção Contato'
+      description: 'Deleta a instância da seção Contato. Requer nível Admin.'
+      operationId: 'Deletar'
+      consumes:
+        - 'application/json'
+      produces:
+        - 'application/json'
+      parameters:
+        - in: 'path'
+          name: id
+          required: true
+          type: 'string'
+      responses:
+        '200':
+          description: "{ mensagem: 'Instância da seção foi deletada com sucesso' }"
+        '400':
+          description: '{ erro: "ID não específicado" ou "ID inválido" }'
+        '403':
+          description: '{ erro: "Não autorizado a fazer essa ação" }'
+        '404':
+          description: '{ erro: "Instância da seção contato não foi encontrada }'
+        '500':
+          description: '{ error: "Erro interno do servidor" }'
+definitions:
+  Contact:
+    type: 'object'
+    properties:
+      email:
+        type: 'string'
+      telephone:
+        type: 'string'
+      address:
+        type: 'string'
+      socialMedia:
+        type: 'array'
+        items:
+          type: 'object'
+          properties:
+            type:
+              type: 'string'
+            iconName:
+              type: 'string'
+            url:
+              type: 'string'
+  ContactResponse:
+    type: 'object'
+    properties:
+      _id:
+        type: 'string'
+      email:
+        type: 'string'
+      telephone:
+        type: 'string'
+      address:
+        type: 'string'
+      socialMedia:
+        type: 'array'
+        items:
+          type: 'object'
+          properties:
+            _id:
+              type: 'string'
+            type:
+              type: 'string'
+            iconName:
+              type: 'string'
+            url:
+              type: 'string'
+      __v:
+        type: 'number'
+schemes:
+  - https

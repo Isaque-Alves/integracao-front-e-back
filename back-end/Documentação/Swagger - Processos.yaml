@@ -1,0 +1,119 @@
+swagger: "2.0"
+info:
+  description: "Gerencia os Processos dos Usuários"
+  version: "1.0.0"
+  title: "Daniel e Thais /processos"
+host: "localhost:3000"
+basePath: "/processos/"
+tags:
+  - name: "Processos"
+    description: "CRUD dos Processos dos Usuários"
+paths:
+  /processo-unico/{processId}:
+    get:
+      tags:
+        - "Processos"
+      summary: "Obtem todos os Processos de um usuário específico"
+      description: "Obtem todos os Processos de um usuário específico. Requer nível de usuario ou admin."
+      operationId: "Obter"
+      parameters: 
+        - in: "path"
+          name: processId
+          required: true
+          type: "string"
+      responses:
+        "200":
+          description: "OK"
+          schema:
+            $ref: "#/definitions/ProcessoResponse"
+        "400":
+          description: '{ erro: "ID não específicado" ou "ID inválido" }'
+        "403":
+          description: '{ erro: "Não autorizado a fazer essa ação" }'
+        "404":
+          description: '{ erro: "Instâncias não foram encontradas" }'
+        "500":
+          description: '{ erro: "Erro interno do servidor" }'
+  /usuario/{userId}:
+    get:
+      tags:
+        - "Processos"
+      summary: "Obtem todos os Processos de um usuário específico"
+      description: "Obtem todos os Processos de um usuário específico. Requer nível de usuario ou admin."
+      operationId: "Obter"
+      parameters: 
+        - in: "path"
+          name: userId
+          required: true
+          type: "string"
+      responses:
+        "200":
+          description: "OK"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/ProcessoResponse"
+        "400":
+          description: '{ erro: "ID não específicado" ou "ID inválido" }'
+        "403":
+          description: '{ erro: "Não autorizado a fazer essa ação" }'
+        "404":
+          description: '{ erro: "Instâncias não foram encontradas" }'
+        "500":
+          description: '{ erro: "Erro interno do servidor" }'
+    post:
+      tags:
+        - "Processos"
+      summary: "Cria uma instância de um novo Processo"
+      description: "Cria uma instância de um novo Processo. Requer nível Admin."
+      operationId: "Adicionar"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "path"
+          name: userId
+          required: true
+          type: "string"
+        - in: "body"
+          name: "body"
+          required: true
+          schema:
+            $ref: "#/definitions/Processo"
+      responses:
+        "200":
+          description: "{ mensagem: 'Instância foi criada com sucesso' }"
+        "400":
+          description: '{ erro: "O nome do processo é obrigatório", "O número do processo é obrigatório", "O local de tramitação é obrigatório", "ID não especificado" ou "ID inválido" }'
+        "403":
+          description: '{ erro: "Não autorizado a fazer essa ação" }'
+        "500":
+          description: '{ erro: "Erro interno do servidor" }'
+definitions:
+  Processo:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+      number:
+        type: "string"
+      processingLocation:
+        type: "string"
+  ProcessoResponse:
+    type: "object"
+    properties:
+      _id:
+        type: "string"
+      user:
+        type: "string"
+      name:
+        type: "string"
+      number:
+        type: "string"
+      processingLocation:
+        type: "string"
+      __v:
+        type: "number"
+schemes:
+  - https

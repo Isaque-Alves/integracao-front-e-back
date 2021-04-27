@@ -1,0 +1,45 @@
+swagger: '2.0'
+info:
+  description: 'Gerencia a seção Sobre'
+  version: '1.0.0'
+  title: 'Daniel e Thais /usuarios'
+host: 'disney.compjunior.com.br'
+basePath: '/api/usuarios/'
+tags:
+  - name: 'Usuários'
+    description: 'GET para listar todos os usuários do sistema'
+paths:
+  /:
+    get:
+      tags:
+        - 'Usuários'
+      summary: 'Obtem todos os usuários do sistema'
+      description: 'Obtem os usuários do sistema. Requer nivel admin'
+      operationId: 'Obter'
+      responses:
+        '200':
+          description: 'OK'
+          schema:
+            type: 'array'
+            items:
+              $ref: '#/definitions/UserResponse'
+        '500':
+          description: '{ erro: "Erro interno do servidor" }'
+definitions:
+  UserResponse:
+    type: 'object'
+    properties:
+      nivel:
+        type: 'string'
+      _id:
+        type: 'string'
+      nome:
+        type: 'string'
+      documento:
+        type: 'string'
+      email:
+        type: 'string'
+      __v:
+        type: 'integer'
+schemes:
+  - https

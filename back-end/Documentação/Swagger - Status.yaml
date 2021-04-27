@@ -1,0 +1,87 @@
+swagger: "2.0"
+info:
+  description: "Gerencia os Status dos Processos"
+  version: "1.0.0"
+  title: "Daniel e Thais /status-processo"
+host: "localhost:3000"
+basePath: "/status-processo/"
+tags:
+  - name: "Status"
+    description: "CRUD dos Status dos Processos"
+paths:
+  /{processId}:
+    get:
+      tags:
+        - "Status"
+      summary: "Obtem todos os Status de um processo específico"
+      description: "Obtem todos os Status de um processo específico"
+      operationId: "Obter"
+      parameters: 
+        - in: "path"
+          name: processId
+          required: true
+          type: "string"
+      responses:
+        "200":
+          description: "OK"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/StatusResponse"
+        "400":
+          description: '{ erro: "ID não específicado" ou "ID inválido" }'
+        "404":
+          description: '{ erro: "Instâncias não foram encontradas" }'
+        "500":
+          description: '{ erro: "Erro interno do servidor" }'
+    post:
+      tags:
+        - "Status"
+      summary: "Cria uma instância de um novo Status"
+      description: "Cria uma instância de um novo Status. Requer nível Admin."
+      operationId: "Adicionar"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "path"
+          name: processId
+          required: true
+          type: "string"
+        - in: "body"
+          name: "body"
+          required: true
+          schema:
+            $ref: "#/definitions/Status"
+      responses:
+        "200":
+          description: "{ mensagem: 'Instância foi criada com sucesso' }"
+        "400":
+          description: '{ erro: "O texto é obrigatório", "ID não especificado", "ID inválido" ou "Não existe um processo com o ID especificado" }'
+        "403":
+          description: '{ erro: "Não autorizado a fazer essa ação" }'
+        "500":
+          description: '{ erro: "Erro interno do servidor" }'
+definitions:
+  Status:
+    type: "object"
+    properties:
+      text:
+        type: "string"
+  StatusResponse:
+    type: "object"
+    properties:
+      _id:
+        type: "string"
+      process:
+        type: "string"
+      date:
+        type: "string"
+        example: "date"
+      text:
+        type: "string"
+      __v:
+        type: "number"
+schemes:
+  - https
